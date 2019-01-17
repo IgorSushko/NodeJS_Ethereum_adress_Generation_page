@@ -1,0 +1,44 @@
+#FROM amazonlinux
+FROM centos
+#MAINTAINER IgorSu
+
+#prepare system
+RUN yum -y update && yum clean all
+RUN yum install -y yum-utils && yum clean all
+RUN yum-builddep -y python
+RUN yum install -y make && yum clean all
+
+#create folders for apps
+RUN mkdir /usr/microservices
+
+#we need node js
+RUN yum install -y git && yum clean all
+RUN curl -sL https://rpm.nodesource.com/setup_8.x | bash -
+RUN yum install -y nodejs && yum clean all
+RUN echo 'export NODE_PATH="'$(npm root -g)'"' >> /etc/profile.d/npm.sh
+RUN npm install --unsafe-perm --global fs
+RUN npm install --unsafe-perm --global cron
+RUN npm install --unsafe-perm --global sleep
+#RUN npm install --unsafe-perm --global mysql
+#RUN npm install --unsafe-perm --global mysql2
+RUN npm install --unsafe-perm --global bitcoinjs-lib
+RUN npm install --unsafe-perm --global bitcoinjs-lib@^3.0.0
+RUN npm install --unsafe-perm --global node-cmd
+RUN npm install --unsafe-perm --global moment-timezone
+RUN npm install --unsafe-perm --global pm2
+RUN npm install --unsafe-perm --global request
+RUN npm install --unsafe-perm --global bip39
+#RUN npm install --unsafe-perm --global web3
+RUN npm install --unsafe-perm --global truffle
+RUN npm install --unsafe-perm --global ethereumjs-wallet
+RUN npm install --unsafe-perm --global bip32-utils
+#RUN npm install --unsafe-perm --global node-rdkafka
+#RUN npm install --unsafe-perm --global bitcore-explorers
+#RUN npm install --unsafe-perm --global blockchain.info
+#RUN npm install --unsafe-perm --global mocha
+
+ADD microservices /usr/microservices
+
+WORKDIR /usr/microservices
+
+CMD printenv | grep -v "yyyyyxxxx" >> /etc/environment && node /usr/microservices/micro_cron/cron.js

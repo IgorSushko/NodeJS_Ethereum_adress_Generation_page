@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-    <H1>This page verify Is your Bank's card valid</H1>
+    <H1>This page verify If your Bank's card valid</H1>
+    <H2>and generate Ethereum address for you, based on your card's number</H2>
     <title>Bank's card validator</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -33,6 +34,16 @@
                  <tr>
                      <td></td>
                      <td><input style="font-size:20px;"  readonly type="text" id="cardValueRes" value="{answerValue}" size="47"></td>
+                     <td></td>
+                 </tr>
+                 <tr>
+                    <td></td>
+                    <td><h1>Your Ethereum wallet address is:</h1></td>
+                    <td></td>
+                </tr>
+                 <tr>
+                     <td></td>
+                     <td><input style="font-size:20px;"  readonly type="text" id="cardEthereumRes" value="{EthereumAddress}" size="47"></td>
                      <td></td>
                  </tr>
           </table>

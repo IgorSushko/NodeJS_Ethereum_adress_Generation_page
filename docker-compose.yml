@@ -1,0 +1,14 @@
+version: '2'
+services:
+  micro:
+    image: microig
+    container_name: microig
+    restart: always
+    ports:
+      - "62000:8080"
+    volumes:
+       - ./logs/:/root/.pm2/logs/
+       - ./microservices/:/usr/microservices/
+    environment:
+      LANG: C.UTF-8
+    

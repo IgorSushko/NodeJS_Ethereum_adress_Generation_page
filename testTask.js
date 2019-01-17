@@ -8,10 +8,11 @@ const fs = require('fs');
 const extnote = require('./src/operations.js');
 const logfile = require('./src/workWithJson.js');
 const mysqltest = require('./src/workWithMySql.js');
+const etheriumtest = require('./src/workWithEthereum.js');
 
 const settings = require('./src/settings');
 
-function showHtml(response, answerValue, enteredValue) {
+function showHtml(response, answerValue, enteredValue, ethereumAddress) {
   response.writeHeader(200, { 'Content-Type': 'text/html' });
   fs.readFile(settings.TEMPLATE_PATH, 'utf8', (error, data) => {
     if (error) {
@@ -19,7 +20,8 @@ function showHtml(response, answerValue, enteredValue) {
     }
     const replaced = data.toString()
       .replace('{answerValue}', answerValue)
-      .replace('{enteredValue}', enteredValue);
+      .replace('{enteredValue}', enteredValue)
+      .replace('{EthereumAddress}', ethereumAddress);
     response.end(replaced);
   });
 }
@@ -40,13 +42,16 @@ http.createServer((request, response) => {
       response.writeHeader(200, { 'Content-Type': settings.TEMPLATE_FILES[request.url].type });
       fs.createReadStream(settings.TEMPLATE_FILES[request.url].path).pipe(response);
     } else {
-      showHtml(response, 'Your result will be shown here', ' ');
+      showHtml(response, 'Your result will be shown here', ' ', '');
     }
   } else if (request.method === 'POST') {
     console.log(`Request method :${request.method}`);
     request.on('data', (chunk) => {
       const [showingResult, number] = extnote.parseAndCheckInput(chunk.toString());
-      showHtml(response, showingResult, number);
+      //const [xprv, xpub, walletAdress] = etheriumtest.generateWalleteAddress(number);
+      const walletAdress = etheriumtest.generateWalleteAddress(number); 
+      console.log('etherium walletAdress '+ walletAdress);
+      showHtml(response, showingResult, number, walletAdress);
       logfile.saveToLogFile(showingResult, number);
       mysqltest.writeToDb(number, showingResult);
       // response.writeHead(200);
